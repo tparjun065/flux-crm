@@ -7,13 +7,13 @@ export const generateInvoicePDF = async (invoice: Invoice) => {
   // Company Header
   pdf.setFontSize(24);
   pdf.setTextColor(138, 92, 246); // Purple color
-  pdf.text('FutureCRM', 20, 30);
+  pdf.text('YourCompany', 20, 30);
   
   pdf.setFontSize(10);
   pdf.setTextColor(100, 100, 100);
-  pdf.text('Digital Solutions Company', 20, 38);
-  pdf.text('123 Future Street, Tech City', 20, 44);
-  pdf.text('contact@futurecrm.com | (555) 123-4567', 20, 50);
+  pdf.text('Your Business Description', 20, 38);
+  pdf.text('Your Address Line 1, City, State ZIP', 20, 44);
+  pdf.text('your-email@company.com | (555) 123-4567', 20, 50);
   
   // Invoice Title
   pdf.setFontSize(28);

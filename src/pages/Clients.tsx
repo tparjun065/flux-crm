@@ -149,10 +149,10 @@ export default function Clients() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="flex justify-between items-center"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0"
       >
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Clients
           </h1>
           <p className="text-muted-foreground mt-2">
@@ -162,12 +162,12 @@ export default function Clients() {
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => openDialog()} className="neon-glow">
+            <Button onClick={() => openDialog()} className="neon-glow w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Add Client
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass border-white/10 max-w-md">
+          <DialogContent className="glass border-white/10 max-w-md mx-4">
             <DialogHeader>
               <DialogTitle>
                 {isViewMode ? "Client Details" : selectedClient ? "Edit Client" : "Add New Client"}
@@ -228,7 +228,7 @@ export default function Clients() {
                 />
               </div>
               {!isViewMode && (
-                <div className="flex justify-end space-x-2">
+                <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                     Cancel
                   </Button>
@@ -269,7 +269,8 @@ export default function Clients() {
             <CardTitle>Clients ({filteredClients.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
+            <div className="overflow-x-auto">
+              <Table>
               <TableHeader>
                 <TableRow className="border-white/10">
                   <TableHead>Name</TableHead>
@@ -295,10 +296,24 @@ export default function Clients() {
                 ) : (
                   filteredClients.map((client) => (
                     <TableRow key={client.id} className="border-white/10">
-                      <TableCell className="font-medium">{client.name}</TableCell>
-                      <TableCell>{client.email}</TableCell>
-                      <TableCell>{client.company || "-"}</TableCell>
-                      <TableCell>{client.phone || "-"}</TableCell>
+                        <TableCell className="font-medium">
+                          <div>
+                            <div>{client.name}</div>
+                            <div className="sm:hidden text-xs text-muted-foreground">
+                              {client.company || "No company"}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div>{client.email}</div>
+                            <div className="md:hidden text-xs text-muted-foreground">
+                              {client.phone || "No phone"}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">{client.company || "-"}</TableCell>
+                        <TableCell className="hidden md:table-cell">{client.phone || "-"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
                           <Button
@@ -316,22 +331,23 @@ export default function Clients() {
                             className="h-8 w-8 p-0"
                           >
                             <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
+                    <TableHead className="hidden sm:table-cell">Company</TableHead>
+                    <TableHead className="hidden md:table-cell">Phone</TableHead>
                             size="sm"
                             variant="destructive"
                             onClick={() => handleDelete(client.id)}
                             className="h-8 w-8 p-0"
                           >
                             <Trash2 className="h-4 w-4" />
-                          </Button>
+                      <TableCell colSpan={5} className="text-center py-8">
                         </div>
                       </TableCell>
                     </TableRow>
                   ))
                 )}
-              </TableBody>
-            </Table>
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

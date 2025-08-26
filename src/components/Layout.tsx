@@ -5,7 +5,7 @@ import {
   Users, 
   FolderOpen, 
   FileText,
-  Activity
+  Building2
 } from "lucide-react";
 
 const navItems = [
@@ -29,14 +29,14 @@ export function Layout() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Activity className="h-8 w-8 text-primary neon-glow" />
+                <Building2 className="h-8 w-8 text-primary neon-glow" />
                 <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  FutureCRM
+                  YourCompany CRM
                 </span>
               </motion.div>
             </div>
             
-            <div className="flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.to}
@@ -59,6 +59,27 @@ export function Layout() {
                   </NavLink>
                 </motion.div>
               ))}
+            </div>
+            
+            {/* Mobile Navigation */}
+            <div className="md:hidden">
+              <div className="flex items-center space-x-2">
+                {navItems.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `p-2 rounded-lg transition-all duration-200 ${
+                        isActive
+                          ? "bg-primary/20 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                      }`
+                    }
+                  >
+                    <item.icon className="h-5 w-5" />
+                  </NavLink>
+                ))}
+              </div>
             </div>
           </div>
         </div>
