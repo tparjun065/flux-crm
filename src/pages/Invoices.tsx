@@ -259,10 +259,10 @@ export default function Invoices() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="flex justify-between items-center"
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0"
       >
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Invoices
           </h1>
           <p className="text-muted-foreground mt-2">
@@ -272,12 +272,12 @@ export default function Invoices() {
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => openDialog()} className="neon-glow">
+            <Button onClick={() => openDialog()} className="neon-glow w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Create Invoice
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass border-white/10 max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="glass border-white/10 max-w-4xl max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>
                 {isViewMode ? "Invoice Details" : selectedInvoice ? "Edit Invoice" : "Create New Invoice"}

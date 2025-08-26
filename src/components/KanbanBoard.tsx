@@ -132,7 +132,7 @@ function KanbanColumn({ status, title, projects, color, onEdit, onDelete, onView
   return (
     <div
       ref={drop}
-      className={`flex-1 min-h-96 p-4 rounded-lg border-2 border-dashed transition-colors duration-300 ${
+      className={`flex-1 min-w-80 min-h-96 p-4 rounded-lg border-2 border-dashed transition-colors duration-300 ${
         isOver ? 'border-primary bg-primary/5' : color
       }`}
     >
