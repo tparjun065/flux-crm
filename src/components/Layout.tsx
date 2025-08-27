@@ -25,14 +25,13 @@ export function Layout() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <motion.div 
-                className="flex items-center space-x-2"
+                className="flex items-center"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <img src={BRAND_LOGO} alt={`${BRAND_NAME} logo`} className="h-8 w-8 rounded-sm shadow" />
-                <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  {BRAND_NAME} CRM
+                <span className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                  {BRAND_NAME}
                 </span>
               </motion.div>
             </div>

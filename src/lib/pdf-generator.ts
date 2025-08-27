@@ -5,111 +5,132 @@ import { BRAND_NAME, BRAND_LOGO } from './brand';
 export const generateInvoicePDF = async (invoice: Invoice) => {
   const pdf = new jsPDF();
   
-  // Company Header
-  // Try to render the logo if available
-  try {
-    const res = await fetch(BRAND_LOGO);
-    const blob = await res.blob();
-    const dataUrl: string = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
-    pdf.addImage(dataUrl, 'PNG', 20, 18, 24, 24);
-  } catch (_) {
-    // ignore logo load errors
-  }
-
+  // Modern glassmorphism background
+  pdf.setFillColor(15, 15, 35); // Dark background
+  pdf.rect(0, 0, 210, 297, 'F');
+  
+  // Glassmorphism header card
+  pdf.setFillColor(30, 30, 50, 0.8); // Semi-transparent
+  pdf.roundedRect(15, 15, 180, 50, 8, 8, 'F');
+  
+  // Gradient border effect (simulated with multiple rectangles)
+  pdf.setDrawColor(138, 92, 246); // Primary purple
+  pdf.setLineWidth(0.5);
+  pdf.roundedRect(15, 15, 180, 50, 8, 8, 'S');
+  
+  // Large brand name - futuristic typography
+  pdf.setFontSize(32);
+  pdf.setTextColor(255, 255, 255); // White text
+  pdf.text(BRAND_NAME, 105, 35, { align: 'center' });
+  
+  // Neon accent line
+  pdf.setDrawColor(64, 224, 208); // Cyan accent
+  pdf.setLineWidth(2);
+  pdf.line(25, 45, 185, 45);
+  
+  // Invoice title card
+  pdf.setFillColor(138, 92, 246, 0.2); // Primary color background
+  pdf.roundedRect(120, 75, 70, 25, 5, 5, 'F');
   pdf.setFontSize(24);
-  pdf.setTextColor(138, 92, 246); // Purple color
-  pdf.text(BRAND_NAME, 50, 30);
+  pdf.setTextColor(255, 255, 255);
+  pdf.text('INVOICE', 155, 92, { align: 'center' });
   
+  // Invoice Details card
+  pdf.setFillColor(25, 25, 40, 0.6);
+  pdf.roundedRect(120, 105, 70, 35, 5, 5, 'F');
   pdf.setFontSize(10);
-  pdf.setTextColor(100, 100, 100);
-  // You can customize these company details in src/lib/brand.ts if needed
-  // pdf.text('Tagline or description', 50, 38);
-
-  // Invoice Title
-  pdf.setFontSize(28);
-  pdf.setTextColor(0, 0, 0);
-  pdf.text('INVOICE', 140, 30);
+  pdf.setTextColor(200, 200, 200);
+  pdf.text(`Invoice #: ${invoice.invoice_no}`, 125, 115);
+  pdf.text(`Date: ${new Date(invoice.date).toLocaleDateString()}`, 125, 125);
+  pdf.text(`Due Date: ${new Date(invoice.due_date).toLocaleDateString()}`, 125, 135);
   
-  // Invoice Details
-  pdf.setFontSize(12);
-  pdf.text(`Invoice #: ${invoice.invoice_no}`, 140, 45);
-  pdf.text(`Date: ${new Date(invoice.date).toLocaleDateString()}`, 140, 55);
-  pdf.text(`Due Date: ${new Date(invoice.due_date).toLocaleDateString()}`, 140, 65);
-  
-  // Client Information
+  // Client Information card
+  pdf.setFillColor(25, 25, 40, 0.6);
+  pdf.roundedRect(15, 75, 100, 65, 5, 5, 'F');
   pdf.setFontSize(14);
-  pdf.setTextColor(0, 0, 0);
-  pdf.text('Bill To:', 20, 80);
+  pdf.setTextColor(64, 224, 208); // Cyan accent
+  pdf.text('Bill To:', 20, 90);
   
   pdf.setFontSize(12);
+  pdf.setTextColor(255, 255, 255);
   if (invoice.clients) {
-    pdf.text(invoice.clients.name, 20, 90);
+    pdf.text(invoice.clients.name, 20, 105);
     if (invoice.clients.company) {
-      pdf.text(invoice.clients.company, 20, 100);
+      pdf.text(invoice.clients.company, 20, 115);
     }
-    pdf.text(invoice.clients.email, 20, 110);
+    pdf.text(invoice.clients.email, 20, 125);
     if (invoice.clients.phone) {
-      pdf.text(invoice.clients.phone, 20, 120);
+      pdf.text(invoice.clients.phone, 20, 135);
     }
   }
   
-  // Line separator
-  pdf.setLineWidth(0.5);
-  pdf.setDrawColor(200, 200, 200);
-  pdf.line(20, 140, 190, 140);
+  // Items table with glassmorphism
+  pdf.setFillColor(138, 92, 246, 0.1);
+  pdf.roundedRect(15, 155, 180, 15, 5, 5, 'F');
   
-  // Table Header
   pdf.setFontSize(12);
-  pdf.setTextColor(0, 0, 0);
-  pdf.setFillColor(248, 249, 250);
-  pdf.rect(20, 150, 170, 10, 'F');
+  pdf.setTextColor(64, 224, 208); // Cyan headers
+  pdf.text('Description', 20, 165);
+  pdf.text('Qty', 120, 165);
+  pdf.text('Price (₹)', 140, 165);
+  pdf.text('Total (₹)', 165, 165);
   
-  pdf.text('Description', 25, 157);
-  pdf.text('Qty', 120, 157);
-  pdf.text('Price', 140, 157);
-  pdf.text('Total', 165, 157);
-  
-  // Table Content
-  let yPosition = 170;
+  // Table Content with alternating row colors
+  let yPosition = 180;
+  pdf.setTextColor(255, 255, 255);
   if (invoice.invoice_items) {
-    invoice.invoice_items.forEach((item) => {
-      pdf.text(item.description, 25, yPosition);
+    invoice.invoice_items.forEach((item, index) => {
+      // Alternating row background
+      if (index % 2 === 0) {
+        pdf.setFillColor(25, 25, 40, 0.3);
+        pdf.rect(15, yPosition - 5, 180, 10, 'F');
+      }
+      
+      pdf.text(item.description, 20, yPosition);
       pdf.text(item.quantity.toString(), 125, yPosition);
-      pdf.text(`$${item.price.toFixed(2)}`, 145, yPosition);
-      pdf.text(`$${item.total.toFixed(2)}`, 170, yPosition);
-      yPosition += 10;
+      pdf.text(`₹${item.price.toFixed(2)}`, 145, yPosition);
+      pdf.text(`₹${item.total.toFixed(2)}`, 170, yPosition);
+      yPosition += 12;
     });
   }
   
-  // Totals
-  yPosition += 10;
-  pdf.setLineWidth(0.5);
-  pdf.line(120, yPosition, 190, yPosition);
+  // Totals section with glassmorphism card
+  yPosition += 15;
+  pdf.setFillColor(25, 25, 40, 0.8);
+  pdf.roundedRect(120, yPosition - 5, 75, 40, 5, 5, 'F');
+  
+  pdf.setDrawColor(64, 224, 208);
+  pdf.setLineWidth(1);
+  pdf.line(125, yPosition + 5, 190, yPosition + 5);
   
   yPosition += 15;
-  pdf.text('Subtotal:', 140, yPosition);
-  pdf.text(`$${invoice.subtotal.toFixed(2)}`, 170, yPosition);
+  pdf.setFontSize(12);
+  pdf.setTextColor(200, 200, 200);
+  pdf.text('Subtotal:', 125, yPosition);
+  pdf.text(`₹${invoice.subtotal.toFixed(2)}`, 175, yPosition);
   
-  yPosition += 10;
-  pdf.text(`Tax (${invoice.tax_rate}%):`, 140, yPosition);
-  pdf.text(`$${invoice.tax_amount.toFixed(2)}`, 170, yPosition);
+  yPosition += 8;
+  pdf.text(`Tax (${invoice.tax_rate}%):`, 125, yPosition);
+  pdf.text(`₹${invoice.tax_amount.toFixed(2)}`, 175, yPosition);
   
-  yPosition += 10;
-  pdf.setFontSize(14);
+  yPosition += 12;
+  pdf.setFontSize(16);
+  pdf.setTextColor(64, 224, 208); // Cyan for total
   pdf.setFont(undefined, 'bold');
-  pdf.text('Total:', 140, yPosition);
-  pdf.text(`$${invoice.total.toFixed(2)}`, 170, yPosition);
+  pdf.text('Total:', 125, yPosition);
+  pdf.text(`₹${invoice.total.toFixed(2)}`, 175, yPosition);
   
-  // Footer
-  pdf.setFontSize(10);
+  // Footer with glassmorphism
+  pdf.setFillColor(25, 25, 40, 0.6);
+  pdf.roundedRect(15, 250, 180, 30, 5, 5, 'F');
+  
+  pdf.setFontSize(12);
   pdf.setFont(undefined, 'normal');
-  pdf.setTextColor(100, 100, 100);
-  pdf.text('Thank you for your business!', 20, 250);
-  pdf.text('Payment terms: Net 30 days', 20, 260);
+  pdf.setTextColor(64, 224, 208);
+  pdf.text('Thank you for your business!', 105, 265, { align: 'center' });
+  pdf.setFontSize(10);
+  pdf.setTextColor(200, 200, 200);
+  pdf.text('Payment terms: Net 30 days', 105, 275, { align: 'center' });
   
   // Save the PDF
   pdf.save(`Invoice-${invoice.invoice_no}.pdf`);
