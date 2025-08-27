@@ -1,20 +1,34 @@
 import jsPDF from 'jspdf';
 import { type Invoice } from './supabase';
+import { BRAND_NAME, BRAND_LOGO } from './brand';
 
 export const generateInvoicePDF = async (invoice: Invoice) => {
   const pdf = new jsPDF();
   
   // Company Header
+  // Try to render the logo if available
+  try {
+    const res = await fetch(BRAND_LOGO);
+    const blob = await res.blob();
+    const dataUrl: string = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+    pdf.addImage(dataUrl, 'PNG', 20, 18, 24, 24);
+  } catch (_) {
+    // ignore logo load errors
+  }
+
   pdf.setFontSize(24);
   pdf.setTextColor(138, 92, 246); // Purple color
-  pdf.text('YourCompany', 20, 30);
+  pdf.text(BRAND_NAME, 50, 30);
   
   pdf.setFontSize(10);
   pdf.setTextColor(100, 100, 100);
-  pdf.text('Your Business Description', 20, 38);
-  pdf.text('Your Address Line 1, City, State ZIP', 20, 44);
-  pdf.text('your-email@company.com | (555) 123-4567', 20, 50);
-  
+  // You can customize these company details in src/lib/brand.ts if needed
+  // pdf.text('Tagline or description', 50, 38);
+
   // Invoice Title
   pdf.setFontSize(28);
   pdf.setTextColor(0, 0, 0);

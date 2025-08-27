@@ -25,6 +25,7 @@ import {
   ResponsiveContainer 
 } from "recharts";
 import { getDashboardStats, projectsApi, invoicesApi } from "@/lib/supabase";
+import { BRAND_NAME } from "@/lib/brand";
 import { useToast } from "@/hooks/use-toast";
 
 const statCards = [
@@ -135,7 +136,7 @@ export default function Dashboard() {
             Dashboard
           </h1>
           <p className="text-muted-foreground mt-2">
-            Welcome to YourCompany CRM dashboard
+            Welcome to {BRAND_NAME} CRM dashboard
           </p>
         </div>
         <Button onClick={refreshDashboard} disabled={loading} variant="outline" className="glass border-white/10">

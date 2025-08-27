@@ -7,6 +7,7 @@ import {
   FileText,
   Building2
 } from "lucide-react";
+import { BRAND_NAME, BRAND_LOGO } from "@/lib/brand";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -29,9 +30,9 @@ export function Layout() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Building2 className="h-8 w-8 text-primary neon-glow" />
+                <img src={BRAND_LOGO} alt={`${BRAND_NAME} logo`} className="h-8 w-8 rounded-sm shadow" />
                 <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  YourCompany CRM
+                  {BRAND_NAME} CRM
                 </span>
               </motion.div>
             </div>

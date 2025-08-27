@@ -167,22 +167,22 @@ export const invoiceItemsApi = {
 
 // Dashboard Stats
 export const getDashboardStats = async () => {
-  const [clientsResult, projectsResult, invoicesResult] = await Promise.all([
-    supabase.from('clients').select('id').then(r => r.count),
-    supabase.from('projects').select('id, budget').then(r => ({
-      count: r.count,
-      total_budget: r.data?.reduce((sum, p) => sum + (p.budget || 0), 0) || 0
-    })),
-    supabase.from('invoices').select('total').then(r => ({
-      count: r.count,
-      total_revenue: r.data?.reduce((sum, i) => sum + (i.total || 0), 0) || 0
-    }))
+  const [clientsCountRes, projectsRes, invoicesRes] = await Promise.all([
+    supabase.from('clients').select('id', { count: 'exact', head: true }),
+    supabase.from('projects').select('id, budget'),
+    supabase.from('invoices').select('total'),
   ]);
 
-  return {
-    clients_count: clientsResult || 0,
-    projects_count: projectsResult.count || 0,
-    total_revenue: invoicesResult.total_revenue || 0,
-    expected_revenue: projectsResult.total_budget || 0
-  };
+  const clients_count = clientsCountRes.count ?? 0;
+  const projects_count = projectsRes.data?.length ?? 0;
+  const expected_revenue = (projectsRes.data || []).reduce(
+    (sum: number, p: any) => sum + (Number(p.budget) || 0),
+    0
+  );
+  const total_revenue = (invoicesRes.data || []).reduce(
+    (sum: number, i: any) => sum + (Number(i.total) || 0),
+    0
+  );
+
+  return { clients_count, projects_count, total_revenue, expected_revenue };
 };
