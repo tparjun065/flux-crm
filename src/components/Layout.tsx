@@ -30,9 +30,11 @@ export function Layout() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <span className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                  {BRAND_NAME}
-                </span>
+                <img 
+                  src={BRAND_LOGO} 
+                  alt={`${BRAND_NAME} logo`} 
+                  className="h-12 w-12 rounded-lg shadow-lg object-cover" 
+                />
               </motion.div>
             </div>
             
